@@ -1,5 +1,12 @@
 const prompt = require('prompt-sync')();
+
 const jogos = [];
+
+const lerIndice = mensagem => parseInt(prompt(mensagem))
+
+const nomeInvalido = nome => nome == ""
+
+const indiceInvalido = indice => indice < 0 || indice >= jogos.length || isNaN(indice)
 
 const modelo = () => {
 
@@ -7,7 +14,7 @@ const modelo = () => {
 
     while(true) {
         jogo.nome = prompt("Qual é o nome do jogo? ");
-        if(jogo.nome == "") {
+        if(nomeInvalido(jogo.nome)) {
             console.log("O nome não pode ser vazio");
         } else {
             break
@@ -15,7 +22,7 @@ const modelo = () => {
     }
 
     while(true) {
-        jogo.ano = Number(prompt("Qual é o ano do jogo? "));
+        jogo.ano = parseInt(prompt("Qual é o ano do jogo? "));
         if(jogo.ano < 1958 || jogo.ano > 2024 || isNaN(jogo.ano)) {
             console.log("O ano é inválido");
         } else {
@@ -43,7 +50,7 @@ const modelo = () => {
 
     while(true) {
         jogo.estudio = prompt("Qual é o estudio do jogo? ");
-        if(jogo.estudio == "") {
+        if(nomeInvalido(jogo.estudio)) {
             console.log("O estudio não pode ser vazio");
         } else {
             break
@@ -57,7 +64,7 @@ const modelo = () => {
             break
         }
 
-        jogo.sequencia = parseInt(prompt("Qual é a sequencia do jogo? "));
+        jogo.sequencia = lerIndice("Qual é a sequencia do jogo? ");
 
         // jogos.forEach((el, i) => {
         //     if(el.nome == jogo.sequencia) {
@@ -66,7 +73,7 @@ const modelo = () => {
         //     }
         // })
 
-        if(jogo.sequencia < 0 || jogo.sequencia >= jogos.length || isNaN(jogo.sequencia)) {
+        if(indiceInvalido(jogo.sequencia)) {
             console.log("A sequencia é invalida");
         } else {
             break
@@ -77,7 +84,7 @@ const modelo = () => {
 }
 const criar = () => {
 
-    let jogo = modelo()
+    const jogo = modelo()
 
     jogos.push(jogo)
 
@@ -88,7 +95,6 @@ const listagem = () => jogos.forEach((jogo, i) => console.log(`${i + 1} - ${jogo
 
 const atualizar = () => {
 
-
     while(true) {
 
         if(jogos.length == 0) {
@@ -96,9 +102,11 @@ const atualizar = () => {
             break
         }
 
-        let indice = parseInt(prompt("Qual é o indice do jogo que deseja atualizar? "))
+        listagem()
 
-        if(indice < 0 || indice >= jogos.length || isNaN(indice)) {
+        const indice = lerIndice("Qual é o indice do jogo que deseja atualizar? ")--
+
+        if(indiceInvalido(indice)) {
             console.log("Indice inválido")
         } else {
             const jogo = modelo()
@@ -107,8 +115,24 @@ const atualizar = () => {
         }
     }
 
-    
-
 }
 
+const remover = () => {
+
+    while(true) {
+
+        listagem()
+
+        const indice = lerIndice("Qual é o indice do jogo que deseja remover? ")--
+
+        if(indiceInvalido(indice)) {
+            console.log("Indice inválido")
+        } else {
+            jogos.splice(indice, 1)
+            console.log("Jogo removido com sucesso")
+            break
+        }
+    }
+
+}
 
