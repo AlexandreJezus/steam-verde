@@ -8,9 +8,20 @@ const nomeInvalido = nome => nome == ""
 
 const indiceInvalido = indice => indice < 0 || indice >= jogos.length || isNaN(indice)
 
+
+const listagem = () => jogos.forEach((jogo, i) => { 
+    let sequencia
+    if(jogo.sequencia != -1) {
+        sequencia = jogos[jogo.sequencia].nome
+    } else {
+        sequencia = "Não possui sequência"
+    }
+    console.log(`${i + 1} - ${jogo.nome} - ${jogo.ano} - ${jogo.duracao} - ${jogo.preco} - ${jogo.estudio} - ${sequencia}`)
+})
+
 const modelo = () => {
 
-    let jogo
+    let jogo = {} // não posso adicionar atributos em algo indefinido
 
     while(true) {
         jogo.nome = prompt("Qual é o nome do jogo? ");
@@ -60,11 +71,13 @@ const modelo = () => {
     while(true) {
 
         if(jogos.length == 0) {
-            jogo.sequencia = undefined
+            jogo.sequencia = -1
             break
         }
 
-        jogo.sequencia = lerIndice("Qual é a sequencia do jogo? ");
+        listagem()
+
+        jogo.sequencia = lerIndice("Qual é a sequencia do jogo? Digite 0 caso não houver sequencia") - 1;
 
         // jogos.forEach((el, i) => {
         //     if(el.nome == jogo.sequencia) {
@@ -73,7 +86,7 @@ const modelo = () => {
         //     }
         // })
 
-        if(indiceInvalido(jogo.sequencia)) {
+        if(jogo.sequencia != -1 && indiceInvalido(jogo.sequencia)) {
             console.log("A sequencia é invalida");
         } else {
             break
@@ -91,8 +104,6 @@ const criar = () => {
     console.log("Jogo criado com sucesso")
 }
 
-const listagem = () => jogos.forEach((jogo, i) => console.log(`${i + 1} - ${jogo.nome} - ${jogo.ano} - ${jogo.duracao} - ${jogo.preco} - ${jogo.estudio} - ${jogo.sequencia}`))
-
 const atualizar = () => {
 
     while(true) {
@@ -104,7 +115,7 @@ const atualizar = () => {
 
         listagem()
 
-        const indice = lerIndice("Qual é o indice do jogo que deseja atualizar? ")--
+        const indice = lerIndice("Qual é o indice do jogo que deseja atualizar? ") - 1
 
         if(indiceInvalido(indice)) {
             console.log("Indice inválido")
@@ -123,11 +134,16 @@ const remover = () => {
 
         listagem()
 
-        const indice = lerIndice("Qual é o indice do jogo que deseja remover? ")--
+        const indice = lerIndice("Qual é o indice do jogo que deseja remover? ") - 1
 
         if(indiceInvalido(indice)) {
             console.log("Indice inválido")
         } else {
+            jogos.forEach(jogo => {
+                if(jogo.sequencia == indice) {
+                    jogo.sequencia = -1
+                }
+            })
             jogos.splice(indice, 1)
             console.log("Jogo removido com sucesso")
             break
@@ -136,3 +152,9 @@ const remover = () => {
 
 }
 
+module.exports = {
+    criar,
+    atualizar,
+    remover,
+    listagem
+}
